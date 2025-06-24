@@ -17,6 +17,7 @@ class GNet(nn.Module):
 
     Args:
         in_channels (int): Number of input feature map channels (default: 384).
+        This default value comes from paper in the experiment section.
     """
 
     def __init__(self, in_channels: int = 384):
