@@ -18,14 +18,19 @@ class SNet(nn.Module):
     Args:
         in_channels (int): Number of selected feature maps (default: 384)
         This default value comes from paper in the experiment section.
+        weight_std: standard deviation (σ) for initializing weights.
     """
 
-    def __init__(self, in_channels=384):
+    def __init__(
+        self,
+        in_channels=384,
+        weight_std: float = 1e-7,
+    ):
         super(SNet, self).__init__()
         self.conv1 = nn.Conv2d(
             in_channels=in_channels,
             out_channels=36,
-            kernel_size=5,
+            kernel_size=9,
             padding=4,
         )
         self.conv2 = nn.Conv2d(
@@ -34,6 +39,11 @@ class SNet(nn.Module):
             kernel_size=5,
             padding=2,
         )
+
+        nn.init.normal_(self.conv1.weight, std=weight_std)
+        nn.init.constant_(self.conv1.bias, 0.1)
+        nn.init.normal_(self.conv2.weight, std=weight_std)
+        nn.init.constant_(self.conv2.bias, 0.0)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """

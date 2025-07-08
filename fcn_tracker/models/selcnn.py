@@ -32,7 +32,7 @@ class SelCNN(nn.Module):
             padding=padding,
         )
 
-        nn.init.normal_(self.conv.weight, mean=0.0, std=weight_std)
+        nn.init.normal_(self.conv.weight, std=weight_std)
         nn.init.constant_(self.conv.bias, bias_value)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
