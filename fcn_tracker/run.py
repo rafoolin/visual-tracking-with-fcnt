@@ -2,7 +2,7 @@ import argparse
 import torch
 
 from entities.particle_filter_params import ParticleFilterParams
-from entities.tracker_params import TrackerParams
+from entities.tracker_params import TrackerParams, SelCNNParams
 from utils.config import load_config
 
 from tracking.fcn_tracker import FCNTracker
@@ -23,14 +23,31 @@ def init_tracker_params(config: any) -> TrackerParams:
         up_thr=config["pf_param"]["up_thr"],
         roi_scale=config["pf_param"]["roi_scale"],
     )
+    tracker_cfg = config["tracker"]
+    selcnn_cfg = tracker_cfg["selCNN"]
 
     # Build tracker_param
     tracker_param = TrackerParams(
         seq_path=seq_path,
         init_bbox=init_bbox,
-        in_channels=config["general"]["in_channels"],
+        in_channels=tracker_cfg["in_channels"],
         pf_param=pf_param,
-        roi_size=config["general"]["roi_size"],
+        roi_size=tracker_cfg["roi_size"],
+        max_iter=tracker_cfg["max_iter"],
+        max_iter_select=tracker_cfg["max_iter_select"],
+        selcnn_param=SelCNNParams(
+            bias_init=selcnn_cfg["bias_init"],
+            dropout_rate=selcnn_cfg["dropout_rate"],
+            in_channels=selcnn_cfg["in_channels"],
+            input_size=selcnn_cfg["input_size"],
+            kernel_size=selcnn_cfg["kernel_size"],
+            learning_rate=selcnn_cfg["learning_rate"],
+            out_channels=selcnn_cfg["out_channels"],
+            padding=selcnn_cfg["padding"],
+            top_k_features=selcnn_cfg["top_k_features"],
+            weight_decay=selcnn_cfg["weight_decay"],
+            weight_std=selcnn_cfg["weight_std"],
+        ),
     )
 
     return tracker_param

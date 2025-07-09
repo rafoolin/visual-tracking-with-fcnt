@@ -14,7 +14,24 @@ pf_param:
   up_thr: 0.35
   roi_scale: 2
 
-general:
+tracker:
   in_channels: 384
   roi_size: 368
+  # Number of iterations for initial saliency map selection and tuning
+  max_iter_select: 100
+  # Number of iterations for training the saliency networks after selection
+  max_iter: 50
+
+  selCNN:
+      in_channels: 512
+      out_channels: 1
+      kernel_size: 3
+      padding: 1
+      dropout_rate: 0.3
+      bias_init: 0.0
+      weight_std: 1e-7
+      learning_rate: 1e-9
+      weight_decay: 2.0
+      top_k_features: 384
+      input_size: [46, 46]
 
