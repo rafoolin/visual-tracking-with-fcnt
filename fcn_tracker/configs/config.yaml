@@ -1,0 +1,20 @@
+# FCNT Tracker Config
+
+# Dataset
+dataset:
+  seq_path: "data/training023"
+  # x y, w, h
+  initial_bbox: [992.0, 678.0, 188.0, 140.0]
+
+pf_param:
+  affsig: [10, 10, 0.004, 0.00, 0.00, 0]
+  p_sz: 64
+  p_num: 700
+  mv_thr: 0.1
+  up_thr: 0.35
+  roi_scale: 2
+
+general:
+  in_channels: 384
+  roi_size: 368
+
