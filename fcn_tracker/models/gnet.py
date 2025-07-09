@@ -33,7 +33,7 @@ class GNet(nn.Module):
             kernel_size=9,
             padding=4,
         )
-        self.conv3 = nn.Conv2d(
+        self.conv2 = nn.Conv2d(
             in_channels=36,
             out_channels=1,
             kernel_size=5,

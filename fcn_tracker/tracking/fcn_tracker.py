@@ -17,9 +17,15 @@ from utils.roi_utils import extract_roi, preprocess_roi
 
 from models.vggnet import VGGNet
 
+from models.snet import SNet
+from models.gnet import GNet
+
 from utils.heatmap import get_gaussian_map
 
 from models.selcnn import SelCNN
+
+
+from utils.feature_selection import compute_saliency
 
 
 @dataclass
@@ -89,7 +95,7 @@ class FCNTracker:
         # [1, C, H, W]
         map_tensor = (
             torch.tensor(self.map1, dtype=torch.float32, device=self.device)
-            .permute(2, 0, 1)
+            .unsqueeze(0)
             .unsqueeze(0)
         )
 
@@ -125,4 +131,57 @@ class FCNTracker:
             print(
                 f"[SelCNN] Iter {i+1:03d}/{max_iter_select}, "
                 f"Loss_s: {loss_s.item():.4f}, Loss_g: {loss_g.item():.4f}"
+            )
+
+        num_channels = int(self.params.in_channels)
+        lid = compute_saliency(
+            feature=self.lfeat1,
+            map_tensor=map_tensor,
+            model=sel_snet,
+            device=self.device,
+        )[:num_channels]
+
+        gid = compute_saliency(
+            feature=self.gfeat1,
+            map_tensor=map_tensor,
+            model=sel_gnet,
+            device=self.device,
+        )[:num_channels]
+
+        self.lfeat1 = self.lfeat1[:, lid, :, :]
+        self.gfeat1 = self.gfeat1[:, gid, :, :]
+
+        # Training on SNet and GNet
+        # Store selected feature maps and map1 (for later online update)
+        self.fea2_store = self.lfeat1.detach().clone()
+        self.map2_store = map_tensor.detach().clone()
+
+        max_iter = int(self.params.max_iter)
+        snet = SNet(in_channels=num_channels).to(device=self.device).eval()
+        gnet = GNet(in_channels=num_channels).to(device=self.device).eval()
+
+        s_optimizer = torch.optim.SGD(snet.parameters(), lr=lr)
+        g_optimizer = torch.optim.SGD(gnet.parameters(), lr=lr)
+        # Fine-tune SNet and GNet using selected feature maps
+        snet.train()
+        gnet.train()
+
+        for i in range(max_iter):
+            s_pre_map = snet(self.lfeat1)
+            g_pre_map = gnet(self.gfeat1)
+
+            s_loss = F.mse_loss(s_pre_map, map_tensor)
+            g_loss = F.mse_loss(g_pre_map, map_tensor)
+
+            s_optimizer.zero_grad()
+            s_loss.backward()
+            s_optimizer.step()
+
+            g_optimizer.zero_grad()
+            g_loss.backward()
+            g_optimizer.step()
+
+            print(
+                f"[Train] Iter {i+1}/{max_iter}, SNet Loss: {s_loss.item():.4f},"
+                f" GNet Loss: {g_loss.item():.4f}"
             )

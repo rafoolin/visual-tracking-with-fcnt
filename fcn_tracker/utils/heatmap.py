@@ -26,7 +26,7 @@ def get_gaussian_map(
         mode (str): 'gaussian' or 'box'
 
     Returns:
-        numpy.ndarray: map of shape (H_feat, W_feat)
+        numpy.ndarray: map of shape (H_feat, W_feat), single channel
     """
     h_img, w_img = im_shape[:2]
     map_full = np.zeros((h_img, w_img), dtype=np.float32)
@@ -75,7 +75,7 @@ def get_gaussian_map(
         map_full = np.repeat(map_full[:, :, np.newaxis], 3, axis=2)
     # Extract ROI
     roi_map, *_ = extract_roi(map_full, location, offset, roi_size, scale)
-    # Resize to match feature map
-    map_resized = cv2.resize(roi_map, (fea_shape[1], fea_shape[0]))
+    # Resize to match feature map and return only 2D map
+    map_resized = cv2.resize(roi_map[:, :, 0], (fea_shape[1], fea_shape[0]))
 
     return map_resized

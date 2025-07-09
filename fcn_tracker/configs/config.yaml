@@ -34,4 +34,10 @@ tracker:
       weight_decay: 2.0
       top_k_features: 384
       input_size: [46, 46]
+  gnet:
+    weight_std: 1e-7
+    learning_rate: 1e-7
 
+  snet:
+    weight_std: 1e-7
+    learning_rate: 1e-7

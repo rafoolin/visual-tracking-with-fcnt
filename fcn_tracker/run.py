@@ -2,7 +2,7 @@ import argparse
 import torch
 
 from entities.particle_filter_params import ParticleFilterParams
-from entities.tracker_params import TrackerParams, SelCNNParams
+from entities.tracker_params import TrackerParams, SelCNNParams, SNetParams, GNetParams
 from utils.config import load_config
 
 from tracking.fcn_tracker import FCNTracker
@@ -25,6 +25,8 @@ def init_tracker_params(config: any) -> TrackerParams:
     )
     tracker_cfg = config["tracker"]
     selcnn_cfg = tracker_cfg["selCNN"]
+    snet_cfg = tracker_cfg["snet"]
+    gnet_cfg = tracker_cfg["gnet"]
 
     # Build tracker_param
     tracker_param = TrackerParams(
@@ -47,6 +49,14 @@ def init_tracker_params(config: any) -> TrackerParams:
             top_k_features=selcnn_cfg["top_k_features"],
             weight_decay=selcnn_cfg["weight_decay"],
             weight_std=selcnn_cfg["weight_std"],
+        ),
+        snet_param=SNetParams(
+            learning_rate=snet_cfg["learning_rate"],
+            weight_std=snet_cfg["weight_std"],
+        ),
+        gnet_param=GNetParams(
+            learning_rate=gnet_cfg["learning_rate"],
+            weight_std=gnet_cfg["weight_std"],
         ),
     )
 

@@ -5,6 +5,18 @@ from entities.particle_filter_params import ParticleFilterParams
 
 
 @dataclass
+class GNetParams:
+    weight_std: float = 1e-7
+    learning_rate: float = 1e-7
+
+
+@dataclass
+class SNetParams:
+    weight_std: float = 1e-7
+    learning_rate: float = 1e-7
+
+
+@dataclass
 class SelCNNParams:
     """
     Configuration for the SelCNN model.
@@ -45,6 +57,8 @@ class TrackerParams:
     max_iter_select: int
     max_iter: int
     selcnn_param: SelCNNParams
+    snet_param: SNetParams
+    gnet_param: GNetParams
     roi_size: int = 368
     in_channels: int = 384
 
