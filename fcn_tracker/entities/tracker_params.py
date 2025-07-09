@@ -20,3 +20,5 @@ class TrackerParams:
         scale = [diag / w, diag / h]
         self.s1 = [self.pf_param.roi_scale * s for s in scale]
         self.s2 = [self.pf_param.roi_scale * s for s in scale]
+        # First image ID is 0
+        self.check_num = 19

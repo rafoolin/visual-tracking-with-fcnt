@@ -1,13 +1,14 @@
 import argparse
-
+import torch
 
 from entities.particle_filter_params import ParticleFilterParams
 from entities.tracker_params import TrackerParams
 from utils.config import load_config
 
+from tracking.fcn_tracker import FCNTracker
 
-def init_tracker_params(config_path: str) -> TrackerParams:
-    config = load_config(config_path=config_path)
+
+def init_tracker_params(config: any) -> TrackerParams:
     # Parse main values
     seq_path = config["dataset"]["seq_path"]
     init_bbox = config["dataset"]["initial_bbox"]
@@ -36,6 +37,14 @@ def init_tracker_params(config_path: str) -> TrackerParams:
 
 
 def main():
+    # Select the device for computation
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
+    print(f"using device: {device}")
     parser = argparse.ArgumentParser(description="Run FCNT Tracker")
     parser.add_argument(
         "--config",
@@ -46,9 +55,20 @@ def main():
     args = parser.parse_args()
     print(args.config)
 
+    # Config
+    config = load_config(config_path=args.config)
+
     # Params
-    tracker_params = init_tracker_params(args.config)
-    print(f"Initial BBox: {tracker_params.init_bbox}")
+    tracker_params = init_tracker_params(config)
+
+    # Tracker
+    fcnt = FCNTracker(
+        config=config,
+        params=tracker_params,
+        device=device,
+    )
+
+    fcnt.initialize()
 
 
 if __name__ == "__main__":

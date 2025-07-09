@@ -5,7 +5,7 @@ import torch.nn as nn
 from torchvision.models import vgg16, VGG16_Weights
 
 
-class VGG(nn.Module):
+class VGGNet(nn.Module):
     """
     VGG16-based feature extractor for FCNT tracking.
 
@@ -23,7 +23,7 @@ class VGG(nn.Module):
         Args:
             pretrained (bool): If True, loads ImageNet pretrained weights.
         """
-        super(VGG, self).__init__()
+        super(VGGNet, self).__init__()
         weights = VGG16_Weights.DEFAULT if pretrained else None
         vgg = vgg16(weights=weights)
 
