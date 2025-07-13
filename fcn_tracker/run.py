@@ -71,7 +71,8 @@ def main():
         device = torch.device("mps")
     else:
         device = torch.device("cpu")
-    print(f"using device: {device}")
+    # TODO: use logger
+    print(f"Using device: {device}")
     parser = argparse.ArgumentParser(description="Run FCNT Tracker")
     parser.add_argument(
         "--config",
@@ -80,8 +81,7 @@ def main():
         help="Path to YAML configuration file",
     )
     args = parser.parse_args()
-    print(args.config)
-
+    # TODO: Log config
     # Config
     config = load_config(config_path=args.config)
 
@@ -90,12 +90,12 @@ def main():
 
     # Tracker
     fcnt = FCNTracker(
-        config=config,
         params=tracker_params,
         device=device,
     )
 
     fcnt.initialize()
+    fcnt.track()
 
 
 if __name__ == "__main__":

@@ -24,8 +24,8 @@ class VGGNet(nn.Module):
             pretrained (bool): If True, loads ImageNet pretrained weights.
         """
         super(VGGNet, self).__init__()
-        weights = VGG16_Weights.DEFAULT if pretrained else None
-        vgg = vgg16(weights=weights)
+        self.weights = VGG16_Weights.IMAGENET1K_V1 if pretrained else None
+        vgg = vgg16(weights=self.weights)
 
         # conv1_1 to conv4_3 (index 0 to 22)
         self.features_4 = nn.Sequential(*vgg.features[:23])

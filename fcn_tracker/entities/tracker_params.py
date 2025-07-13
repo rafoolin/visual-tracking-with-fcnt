@@ -8,12 +8,14 @@ from entities.particle_filter_params import ParticleFilterParams
 class GNetParams:
     weight_std: float = 1e-7
     learning_rate: float = 1e-7
+    momentum: int = 0.9
 
 
 @dataclass
 class SNetParams:
     weight_std: float = 1e-7
     learning_rate: float = 1e-7
+    momentum: int = 0.9
 
 
 @dataclass
@@ -45,6 +47,7 @@ class SelCNNParams:
     learning_rate: float = 1e-9
     weight_decay: float = 2.0
     top_k_features: int = 384
+    momentum: int = 0.9
     input_size: List[int] = field(default_factory=lambda: [46, 46])
 
 
