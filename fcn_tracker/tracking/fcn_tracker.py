@@ -457,7 +457,7 @@ class FCNTracker:
 
                 # Stack features into a batch of 2
                 # [2, C, H, W]
-                fea_batch = torch.stack([self.lfeat1, fea2_store], dim=0)
+                fea_batch = torch.cat([self.lfeat1, fea2_store], dim=0)
                 # [2, 1, H, W]
                 map_batch = torch.cat([self.map_tensor, map2_store], dim=0)
 
@@ -484,7 +484,7 @@ class FCNTracker:
                 self.snet.train()
 
                 # Feature batch: fea2_store and lfea2
-                lfea2_batch = torch.stack([fea2_store, lfea2], dim=0)  # [2, C, H, W]
+                lfea2_batch = torch.cat([fea2_store, lfea2], dim=0)  # [2, C, H, W]
 
                 # Offset from previous position
                 l_off = np.array(location_last[:2]) - np.array(location[:2])
