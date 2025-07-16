@@ -27,7 +27,8 @@ init_bbox: [x, y, w, h]                   # Initial bounding box in the first fr
 
 ## 🔧 Environment Setup
 
-This project uses **Conda**. Run the script below to create the environment and run the code.
+This project uses **Conda**. Run the script below to create the environment and run the code after configuring `config.yaml` or you can use the command in section [Run Tracker](#-run-tracker):
+
 
 ```bash
 bash run_fcnt.sh
@@ -35,7 +36,7 @@ bash run_fcnt.sh
 
 ## 🚀 Run Tracker
 
-Once the config file is set, run the tracker:
+Once the config file is set, you can also run the tracker as follow:
 
 ```
 python run.py --config configs/config.yaml
